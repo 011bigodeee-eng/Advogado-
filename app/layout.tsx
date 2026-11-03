@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./redesign.css";
 export const metadata: Metadata = {
   title: "Dr. Osmar Malta | Advocacia",
   description:
-    "Orientação jurídica com seriedade em cada decisão. Direito de Família, Inventários e Execução Penal no Rio de Janeiro.",
+    "Compromisso com o Direito. Respeito à sua história. Direito de Família, Inventários e Execução Penal no Rio de Janeiro.",
   openGraph: {
     title: "Dr. Osmar Malta | Advocacia",
     description:

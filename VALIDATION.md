@@ -23,3 +23,13 @@ Relatórios locais: `/tmp/osmar-lighthouse-final.json` e capturas `/tmp/osmar-de
 ## Atualização dos retratos enviados
 
 Três imagens PNG de 510 × 510px, extraídas do ZIP enviado pelo usuário, foram adicionadas à abertura, à apresentação profissional e ao painel de atendimento. Os originais foram preservados, com enquadramento realizado apenas no layout. A abertura em dispositivos móveis apresenta texto e retrato em sequência; nenhum texto é colocado sobre o rosto. O efeito líquido foi transferido para uma imagem arquitetônica, preservando os retratos sem distorção. Build e testes funcionais foram reexecutados para esta atualização; a pontuação Lighthouse acima pertence à versão anterior à inclusão dos retratos.
+
+## Reformulação da identidade jurídica
+
+Hero reconstruída com fundo grafite, nome em tipografia monumental, novo título e retrato em moldura editorial sem recorte de pessoa. Cards reconstruídos em componente próprio, com três novas cenas jurídicas locais de 1536 × 1024px: consulta familiar, orientação sucessória e análise processual em sala de audiência. As imagens antigas de arquitetura não são referenciadas pela página.
+
+Build de produção aprovado. Testes aprovados nas oito larguras: ausência de overflow, nome sem cortes, separação entre texto e retrato, todos os links dos cards, carregamento das novas imagens, menu/teclado, FAQ, privacidade, consentimento, WhatsApp e Instagram. Verificadas as revelações no desktop e em contexto mobile com toque, incluindo navegação por tap. Os originais dos retratos enviados não foram modificados.
+
+Nova amostra Lighthouse mobile local desta reformulação: **96 em desempenho, 100 em acessibilidade e 100 em boas práticas**. SEO permanece **63** pela diretiva intencional de não indexação da prévia. Nenhum erro de console registrado pelo Lighthouse. Essas medições substituem as pontuações da composição anterior para esta versão; continuam sendo resultados de laboratório.
+
+Relatório: `/tmp/osmar-redesign-lighthouse.json`. Capturas: `/tmp/osmar-desktop.png`, `/tmp/osmar-mobile.png`, `/tmp/osmar-mobile-motion.png` e `/tmp/osmar-full.png`. Conferência final de origem e autorização dos retratos permanece necessária antes da divulgação como fotografias originais do profissional.

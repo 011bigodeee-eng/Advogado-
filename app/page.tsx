@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import PracticeCard from "@/components/PracticeCard";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -98,21 +99,56 @@ export default function Home() {
       tick = (time) => lenis?.raf(time * 1000);
       gsap.ticker.add(tick);
       const ctx = gsap.context(() => {
-        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.9,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 94%", once: true },
+        gsap.utils
+          .toArray<HTMLElement>("[data-reveal]:not(.practice-card)")
+          .forEach((el) => {
+            gsap.fromTo(
+              el,
+              { y: 30, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.9,
+                ease: "power2.out",
+                scrollTrigger: { trigger: el, start: "top 94%", once: true },
+              },
+            );
+          });
+        gsap.fromTo(
+          ".practice-card",
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.95,
+            stagger: 0.16,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ".practice-grid",
+              start: "top 90%",
+              once: true,
             },
-          );
-        });
-        gsap.to(".hero-photo", {
-          yPercent: 14,
+          },
+        );
+        gsap.utils.toArray<HTMLElement>(".card-image").forEach((image) =>
+          gsap.fromTo(
+            image,
+            { clipPath: "inset(12% 0 0 0)" },
+            {
+              clipPath: "inset(0% 0 0 0)",
+              duration: 1.2,
+              ease: "power3.out",
+              scrollTrigger: { trigger: image, start: "top 94%", once: true },
+            },
+          ),
+        );
+        gsap.fromTo(
+          ".hero-portrait",
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 1.2, delay: 1.8, ease: "power2.out" },
+        );
+        gsap.to(".hero-portrait-photo", {
+          yPercent: 5,
           ease: "none",
           scrollTrigger: {
             trigger: ".hero",
@@ -216,10 +252,7 @@ export default function Home() {
         </div>
       )}
       <header className={scrolled ? "site-header solid" : "site-header"}>
-        <a
-          className="wordmark"
-          href="#inicio"
-        >
+        <a className="wordmark" href="#inicio">
           OSMAR MALTA<small>ADVOCACIA</small>
         </a>
         <nav aria-label="Navegação principal">
@@ -271,26 +304,39 @@ export default function Home() {
         </div>
       )}
       <main id="conteudo">
-        <section className="hero" id="inicio">
-          <Image
-            className="hero-photo"
-            src="/images/hero.png"
-            alt="Interior de arquitetura contemporânea com madeira, pedra e iluminação natural"
-            fill
-            preload
-            sizes="100vw"
-          />
-          <div className="hero-shade" />
+        <section className="hero" id="inicio" onPointerMove={hover}>
+          <div className="hero-atmosphere" aria-hidden="true">
+            <div className="hero-orbit" />
+            <span className="hero-axis" />
+          </div>
           <div className="hero-portrait">
-            <Image src="/images/retrato-abertura.png" alt="Retrato enviado para a apresentação de Dr. Osmar Malta, em terno escuro" fill preload sizes="(max-width: 767px) 85vw, 36vw" />
+            <div className="portrait-frame">
+              <Image
+                className="hero-portrait-photo"
+                src="/images/retrato-abertura.png"
+                alt="Retrato fornecido para a apresentação de Dr. Osmar Malta"
+                fill
+                preload
+                sizes="(max-width: 767px) 88vw, 40vw"
+              />
+              <span className="portrait-corner" aria-hidden="true" />
+            </div>
+            <div className="portrait-credit">
+              <span>DR. OSMAR MALTA</span>
+              <span>ADVOCACIA · RIO DE JANEIRO</span>
+            </div>
           </div>
           <div className="hero-content">
-            <Eyebrow>DR. OSMAR MALTA · RIO DE JANEIRO</Eyebrow>
+            <Eyebrow>ADVOCACIA · RIO DE JANEIRO</Eyebrow>
+            <p className="hero-name">
+              <span className="hero-prefix">DR. OSMAR</span>
+              <span className="hero-surname">MALTA</span>
+              <span className="name-rule" aria-hidden="true" />
+            </p>
             <h1>
-              <span className="hero-line">Orientação jurídica</span>
-              <span className="hero-line">com seriedade em</span>
+              <span className="hero-line">Compromisso com o Direito.</span>
               <span className="hero-line">
-                <em>cada decisão.</em>
+                <em>Respeito à sua história.</em>
               </span>
             </h1>
             <div className="hero-bottom">
@@ -422,35 +468,7 @@ export default function Home() {
           </div>
           <div className="practice-grid">
             {areas.map((area) => (
-              <a
-                key={area.number}
-                href="#contato"
-                className="practice-card"
-                onPointerMove={hover}
-                onPointerLeave={(e) =>
-                  e.currentTarget.style.setProperty("--tilt", "0deg")
-                }
-                data-reveal
-              >
-                <div className="card-image">
-                  <Image
-                    src={area.image}
-                    alt={area.detail}
-                    fill
-                    sizes="(max-width: 767px) 90vw, 32vw"
-                  />
-                  <span>{area.detail}</span>
-                </div>
-                <div className="card-top">
-                  <span>{area.number}</span>
-                  <Arrow />
-                </div>
-                <h3>{area.title}</h3>
-                <p>{area.text}</p>
-                <span className="card-link">
-                  CONVERSAR SOBRE O ASSUNTO <Arrow />
-                </span>
-              </a>
+              <PracticeCard key={area.number} area={area} />
             ))}
           </div>
         </section>
@@ -461,8 +479,8 @@ export default function Home() {
           <div className="diagonal-track">
             <div className="interlude-image liquid-architecture">
               <Image
-                src="/images/detail.png"
-                alt="Detalhes de materiais naturais e arquitetura"
+                src="/images/execucao-penal.png"
+                alt="Cena ilustrativa de análise processual em ambiente jurídico brasileiro"
                 fill
                 sizes="60vw"
               />
@@ -474,8 +492,8 @@ export default function Home() {
             </p>
             <div className="interlude-image second">
               <Image
-                src="/images/family.png"
-                alt="Ambiente acolhedor com iluminação suave"
+                src="/images/direito-familia.png"
+                alt="Cena ilustrativa de consulta jurídica familiar com adultos"
                 fill
                 sizes="40vw"
               />
@@ -704,8 +722,15 @@ export default function Home() {
                   <small>Contato oficial pendente de confirmação.</small>
                 </div>
               )}
-              <a className="contact-instagram text-link" href={office.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram: @osmarmaltaadvogado (abre em nova aba)">
-                <span>Instagram · {office.instagramHandle}</span><Arrow />
+              <a
+                className="contact-instagram text-link"
+                href={office.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram: @osmarmaltaadvogado (abre em nova aba)"
+              >
+                <span>Instagram · {office.instagramHandle}</span>
+                <Arrow />
               </a>
               <p className="contact-region">
                 Centro · Del Castilho · Santa Cruz
@@ -803,8 +828,9 @@ export default function Home() {
           <span>PRÉVIA INSTITUCIONAL · DADOS SUJEITOS À VALIDAÇÃO</span>
         </div>
         <p className="legal-note">
-          Retratos fornecidos para esta prévia. Imagens arquitetônicas ilustrativas; não retratam instalações do
-          escritório. Conteúdo informativo. Não constitui aconselhamento
+          Retratos fornecidos para esta prévia. Cenas jurídicas ilustrativas,
+          geradas por IA; não retratam clientes, processos ou instalações reais
+          do escritório. Conteúdo informativo. Não constitui aconselhamento
           jurídico individual. OAB, endereço, horário e demais informações
           profissionais pendentes de confirmação. Publicação sujeita à revisão
           do advogado.

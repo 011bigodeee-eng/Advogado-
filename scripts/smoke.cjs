@@ -45,6 +45,25 @@ const fs = require("node:fs");
           `Horizontal overflow: ${width}px, #${id}`,
         );
       }
+      const nameFits = await page.locator(".hero-name").evaluate((element) => {
+        const outer = element.getBoundingClientRect();
+        return [
+          ...element.querySelectorAll(".hero-prefix,.hero-surname"),
+        ].every((span) => {
+          const range = document.createRange();
+          range.selectNodeContents(span);
+          const text = range.getBoundingClientRect();
+          return text.left >= outer.left - 1 && text.right <= outer.right + 1;
+        });
+      });
+      assert.equal(nameFits, true, `Clipped lawyer name at ${width}px`);
+      const copy = await page.locator(".hero-content").boundingBox();
+      const portrait = await page.locator(".hero-portrait").boundingBox();
+      assert(
+        copy.x + copy.width <= portrait.x + 1 ||
+          copy.y + copy.height <= portrait.y + 1,
+        `Hero copy overlaps portrait at ${width}px`,
+      );
       console.log(`PASS layout ${width}px`);
     }
     await page.setViewportSize({ width: 390, height: 844 });
@@ -64,6 +83,31 @@ const fs = require("node:fs");
     await page.locator('#mobile-navigation a[href="#atuacao"]').click();
     assert.equal(await page.locator("#mobile-navigation").count(), 0);
     console.log("PASS mobile menu, keyboard Escape and anchor");
+    const expectedImages = [
+      "/images/direito-familia.png",
+      "/images/inventarios.png",
+      "/images/execucao-penal.png",
+    ];
+    for (let index = 0; index < 3; index++) {
+      const card = page.locator(".practice-card").nth(index);
+      assert.equal(await card.getAttribute("href"), "#contato");
+      assert(
+        (await card.locator("img").getAttribute("src")).includes(
+          encodeURIComponent(expectedImages[index]),
+        ),
+      );
+      await card.click();
+      await page.waitForTimeout(100);
+      assert.equal(new URL(page.url()).hash, "#contato");
+    }
+    assert.equal(await page.locator(".hero-name").count(), 1);
+    assert.equal(await page.locator(".hero-photo").count(), 0);
+    assert(
+      (await page.locator("h1").innerText()).includes(
+        "Compromisso com o Direito.",
+      ),
+    );
+    console.log("PASS legal imagery, all card links and new hero identity");
     const faq = page.locator("details").first();
     await faq.locator("summary").click();
     assert((await faq.getAttribute("open")) !== null);
@@ -99,10 +143,17 @@ const fs = require("node:fs");
       await page.locator(".contact-email").getAttribute("href"),
       "mailto:maltaemachadoadv@gmail.com",
     );
-    assert.equal(await page.locator('.contact-whatsapp').getAttribute('href'), 'https://wa.me/5521988049390');
-    assert.equal(await page.locator('.contact-instagram').getAttribute('href'), 'https://www.instagram.com/osmarmaltaadvogado/');
+    assert.equal(
+      await page.locator(".contact-whatsapp").getAttribute("href"),
+      "https://wa.me/5521988049390",
+    );
+    assert.equal(
+      await page.locator(".contact-instagram").getAttribute("href"),
+      "https://www.instagram.com/osmarmaltaadvogado/",
+    );
     console.log("PASS consent, form validation and verified contact");
     await page.locator("#inicio").scrollIntoViewIfNeeded();
+    await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: "/tmp/osmar-mobile.png" });
     for (
       let y = 0;
@@ -146,17 +197,64 @@ const fs = require("node:fs");
         .count()) > 0,
     );
     console.log("PASS cinematic intro and sculpture/fallback");
-    for (let y = 0; y < await desktop.evaluate(() => document.body.scrollHeight); y += 650) {
-      await desktop.evaluate(y => scrollTo(0, y), y);
+    for (
+      let y = 0;
+      y < (await desktop.evaluate(() => document.body.scrollHeight));
+      y += 650
+    ) {
+      await desktop.evaluate((y) => scrollTo(0, y), y);
       await desktop.waitForTimeout(90);
     }
     await desktop.waitForTimeout(1000);
-    const unrevealed = await desktop.locator('[data-reveal]').evaluateAll(nodes => nodes.filter(node => Number(getComputedStyle(node).opacity) < 0.95).map(node => node.className));
+    const unrevealed = await desktop
+      .locator("[data-reveal]")
+      .evaluateAll((nodes) =>
+        nodes
+          .filter((node) => Number(getComputedStyle(node).opacity) < 0.95)
+          .map((node) => node.className),
+      );
     assert.deepEqual(unrevealed, []);
-    console.log('PASS every scroll reveal, including rapid scrolling');
+    console.log("PASS every scroll reveal, including rapid scrolling");
     await desktop.evaluate(() => scrollTo(0, 0));
     await desktop.screenshot({ path: "/tmp/osmar-full.png", fullPage: true });
     await motion.close();
+    const touch = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const mobile = await touch.newPage();
+    await mobile.goto(process.env.TEST_URL || "http://127.0.0.1:3000", {
+      waitUntil: "networkidle",
+    });
+    await mobile.waitForTimeout(2400);
+    for (
+      let y = 0;
+      y < (await mobile.evaluate(() => document.body.scrollHeight));
+      y += 500
+    ) {
+      await mobile.evaluate((y) => scrollTo(0, y), y);
+      await mobile.waitForTimeout(100);
+    }
+    await mobile.waitForTimeout(1200);
+    assert.equal(
+      await mobile
+        .locator("[data-reveal]")
+        .evaluateAll(
+          (nodes) =>
+            nodes.filter(
+              (node) => Number(getComputedStyle(node).opacity) < 0.95,
+            ).length,
+        ),
+      0,
+    );
+    await mobile.locator(".practice-card").first().tap();
+    await mobile.waitForTimeout(1200);
+    assert.equal(new URL(mobile.url()).hash, "#contato");
+    await mobile.locator("#inicio").scrollIntoViewIfNeeded();
+    await mobile.screenshot({ path: "/tmp/osmar-mobile-motion.png" });
+    await touch.close();
+    console.log("PASS mobile motion, scroll reveals and touch card navigation");
   } finally {
     await browser.close();
   }

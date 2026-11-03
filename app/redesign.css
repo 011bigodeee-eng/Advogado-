@@ -1,0 +1,933 @@
+/* Editorial legal identity — independent of architectural scenery. */
+:root {
+  --deep: #080a0c;
+}
+.site-header {
+  height: 92px;
+  background: linear-gradient(#080a0c80, transparent);
+  border-bottom-color: #c3a5741c;
+}
+.wordmark {
+  font-size: 24px;
+  letter-spacing: 0.09em;
+}
+.site-header nav a {
+  font-size: 10px;
+}
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 6%;
+  padding: 155px 6.3% 105px;
+  height: auto;
+  min-height: max(860px, 100svh);
+  max-height: none;
+  background: #101316;
+  overflow: hidden;
+}
+.hero:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      550px circle at var(--mx, 75%) var(--my, 40%),
+      #c3a5740c,
+      transparent 75%
+    ),
+    linear-gradient(115deg, #080a0c, #14191c 68%, #101316);
+}
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-orbit {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border: 1px solid #c3a57412;
+  border-radius: 50%;
+  right: -15%;
+  top: 5%;
+  transform: rotateX(25deg) rotateY(-25deg);
+}
+.hero-orbit:before,
+.hero-orbit:after {
+  content: "";
+  position: absolute;
+  border: 1px solid #c3a5740c;
+  border-radius: 50%;
+  inset: 60px;
+}
+.hero-orbit:after {
+  inset: 120px;
+}
+.hero-axis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 61.5%;
+  width: 1px;
+  background: linear-gradient(transparent, #c3a57420, transparent);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
+}
+.hero-content .eyebrow {
+  margin-bottom: 28px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+.hero-name {
+  font-family: var(--serif);
+  font-size: clamp(80px, 8.6vw, 130px);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+  color: var(--paper);
+  position: relative;
+  padding-bottom: 34px;
+  animation: brandReveal 1.1s 1.7s both;
+}
+.hero-name > .hero-surname {
+  display: block;
+  margin-top: 10px;
+  color: var(--gold);
+  letter-spacing: 0.025em;
+}
+.name-rule {
+  display: block;
+  position: absolute;
+  width: 80px;
+  height: 1px;
+  background: var(--gold);
+  bottom: 0;
+  left: 0;
+}
+.hero h1 {
+  font-size: clamp(28px, 2.75vw, 42px);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  max-width: none;
+  margin-top: 29px;
+}
+.hero-line {
+  padding-bottom: 0.04em;
+  margin-bottom: -0.04em;
+}
+.hero-line:nth-child(1) {
+  animation-delay: 1.9s;
+}
+.hero-line:nth-child(2) {
+  animation-delay: 2.05s;
+}
+.hero-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 27px;
+  max-width: 540px;
+  margin-top: 23px;
+  align-items: center;
+}
+.hero-bottom p {
+  width: 100%;
+  max-width: 460px;
+  flex: 0 0 100%;
+  font-size: 12px;
+  line-height: 1.9;
+  color: #b4b6b4;
+  margin-bottom: 7px;
+}
+.hero-bottom .button {
+  font-size: 10px;
+  padding: 19px 23px;
+  gap: 25px;
+  min-height: 55px;
+}
+.hero-bottom .text-link {
+  font-size: 10px;
+  gap: 20px;
+  min-height: 48px;
+}
+.hero-portrait {
+  position: relative;
+  inset: auto;
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  max-width: 480px;
+  mask-image: none !important;
+  margin: 10px 0 0;
+  z-index: 1;
+  align-self: center;
+  justify-self: end;
+  perspective: 900px;
+}
+.portrait-frame {
+  position: relative;
+  aspect-ratio: 0.92;
+  background: #0b0d0f;
+  border: 1px solid #c3a5743d;
+  box-shadow:
+    20px 24px 0 -1px #0c1012,
+    20px 24px 0 0 #c3a57420;
+  overflow: hidden;
+}
+.portrait-frame:before {
+  content: "OM.";
+  position: absolute;
+  top: 20px;
+  left: 21px;
+  z-index: 2;
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  color: #b7aa92;
+}
+.hero-portrait .hero-portrait-photo {
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 1;
+  transform-origin: center bottom;
+}
+.portrait-corner {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 34px;
+  height: 34px;
+  border-right: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+}
+.portrait-credit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 47px;
+  color: var(--gold);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+}
+.portrait-credit span:last-child {
+  font-size: 6px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.hero-caption {
+  position: absolute;
+  left: 6.3%;
+  right: 6.3%;
+  bottom: 27px;
+  width: auto;
+  margin: 0;
+  order: initial;
+  font-size: 7px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+.location-band {
+  background: #0c1012;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+.section-label {
+  font-size: 9px;
+}
+.section-label span + span {
+  font-size: 8px;
+}
+.manifesto {
+  background: #111619;
+}
+.professional-portrait {
+  aspect-ratio: 0.94;
+  margin-right: 15px;
+  clip-path: inset(-25px -5px -30px -25px);
+}
+.professional-portrait:before {
+  background: #0b0f11;
+  left: -18px;
+  bottom: -20px;
+  right: 35px;
+  top: 55px;
+  border: 1px solid var(--line);
+}
+.professional-portrait img {
+  filter: saturate(0.7);
+  object-fit: cover;
+  object-position: 50% 24%;
+}
+.photo-note {
+  padding: 22px;
+  font-size: 7px;
+  min-height: 70px;
+  background: linear-gradient(transparent, #080a0ce8);
+}
+.manifesto-copy .eyebrow {
+  font-size: 8px;
+}
+.manifesto-copy > p:not(.eyebrow) {
+  font-size: 13px;
+}
+.manifesto-copy h2 {
+  font-size: clamp(39px, 4.2vw, 64px);
+}
+.practice {
+  background: #080a0c;
+  position: relative;
+}
+.practice .section-heading {
+  margin-bottom: 52px;
+}
+.practice .section-heading h2 {
+  font-size: clamp(37px, 4vw, 61px);
+}
+.practice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+  align-items: stretch;
+  perspective: 1200px;
+}
+.practice-card {
+  min-width: 0;
+  border: 1px solid #c3a57428;
+  border-top: 0;
+  background: #14191c;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  transform: perspective(1000px) rotateY(var(--tilt, 0deg));
+  transition:
+    transform 0.45s,
+    box-shadow 0.4s,
+    border-color 0.4s;
+  isolation: isolate;
+}
+.practice-card:hover,
+.practice-card:focus-visible {
+  border-color: #c3a57480;
+  box-shadow: 0 20px 50px #0004;
+}
+.practice-card:after {
+  z-index: -1;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 0%),
+    #c3a57419,
+    transparent 80%
+  );
+}
+.card-image {
+  position: relative;
+  aspect-ratio: 1.35;
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  background: #202427;
+  z-index: 0;
+}
+.card-image:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, #14191caa);
+  pointer-events: none;
+}
+.card-image img {
+  object-fit: cover;
+  filter: saturate(0.65);
+  opacity: 0.94;
+  transform: scale(1.01);
+  transition:
+    transform 1.3s cubic-bezier(0.2, 0.65, 0.25, 1),
+    filter 0.8s,
+    opacity 0.6s;
+}
+.practice-card:hover .card-image img,
+.practice-card:focus-visible .card-image img {
+  transform: scale(1.065);
+  opacity: 1;
+  filter: saturate(0.85);
+}
+.card-image .card-image-tag {
+  z-index: 2;
+  position: absolute;
+  left: 18px;
+  bottom: 17px;
+  right: auto;
+  color: #f4f0e8d0;
+  font-size: 6px;
+  letter-spacing: 0.16em;
+  text-shadow: 0 1px 5px #000;
+  background: #10131650;
+  border: 1px solid #ffffff26;
+  padding: 6px 8px;
+}
+.card-body {
+  position: relative;
+  z-index: 1;
+  padding: 24px 26px 27px;
+  margin: 0 12px;
+  margin-top: -12px;
+  background: #14191c;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #c3a57470;
+}
+.card-top {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--gold);
+  font-size: 7px;
+  letter-spacing: 0.12em;
+}
+.card-top span:last-child {
+  font-family: var(--serif);
+  font-size: 33px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #c3a574aa;
+}
+.practice-card h3 {
+  padding: 0;
+  font-size: clamp(29px, 2.8vw, 42px);
+  line-height: 1.1;
+  margin: 20px 0 16px;
+  letter-spacing: -0.03em;
+}
+.card-body > p {
+  color: #b8bab8;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0 0 26px;
+  flex: 1;
+}
+.card-link {
+  margin: auto 0 0;
+  padding-top: 19px;
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  gap: 10px;
+  min-height: 44px;
+}
+.card-link svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.4s;
+}
+.practice-card:hover .card-link svg {
+  transform: translate(3px, -3px);
+}
+.practice-card:active {
+  transform: perspective(1000px) rotateY(0) scale(0.985);
+}
+.visual-interlude {
+  background: #101619;
+  height: 440px;
+}
+.interlude-image {
+  opacity: 0.66;
+}
+.diagonal-track p {
+  text-shadow: 0 5px 25px #080a0c;
+}
+.values {
+  background: #101316;
+}
+.values-list .value-row h3 {
+  font-size: 29px;
+}
+.value-row p {
+  font-size: 12px;
+}
+.story-section {
+  background: #101316;
+}
+.story-caption {
+  border-top: 1px solid var(--line);
+}
+.process {
+  background: #0b1013;
+}
+.process-step > div > span {
+  font-family: var(--serif);
+  font-size: 27px;
+}
+.process-step h3 {
+  font-size: 29px;
+}
+.process-step > p {
+  font-size: 12px;
+}
+.faq-intro > p:last-child {
+  font-size: 13px;
+}
+.faq-list summary h3 {
+  font-size: 13px;
+}
+.faq-list .faq-answer p {
+  font-size: 13px;
+}
+.contact {
+  background:
+    radial-gradient(ellipse at top left, #c3a57408, transparent 60%), #171d20;
+}
+.form-title {
+  font-size: 30px;
+}
+.site-footer {
+  background: #080a0c;
+}
+@keyframes brandReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0);
+  }
+}
+@media (min-width: 1600px) {
+  .hero {
+    padding-left: max(6.3%, calc((100vw - 1450px) / 2));
+    padding-right: max(6.3%, calc((100vw - 1450px) / 2));
+  }
+}
+@media (max-width: 1100px) {
+  .hero {
+    gap: 5%;
+    padding-top: 150px;
+    padding-bottom: 115px;
+    min-height: 820px;
+  }
+  .hero-name {
+    font-size: clamp(76px, 9vw, 106px);
+  }
+  .hero h1 {
+    font-size: 30px;
+  }
+  .hero-bottom {
+    gap: 16px 20px;
+  }
+  .hero-bottom .button {
+    padding: 17px 18px;
+    font-size: 9px;
+    gap: 16px;
+  }
+  .hero-bottom .text-link {
+    font-size: 9px;
+    gap: 13px;
+  }
+  .portrait-credit {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .practice-grid {
+    gap: 17px;
+  }
+  .card-body {
+    margin-left: 7px;
+    margin-right: 7px;
+    padding: 22px 20px;
+  }
+  .practice-card h3 {
+    font-size: 32px;
+  }
+  .card-body > p {
+    font-size: 11px;
+  }
+  .card-link {
+    font-size: 6px;
+  }
+  .professional-portrait {
+    aspect-ratio: 0.85;
+  }
+}
+@media (min-width: 768px) and (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.85fr);
+    gap: 5%;
+    min-height: 790px;
+  }
+  .hero-name {
+    font-size: 80px;
+  }
+  .hero h1 {
+    font-size: 27px;
+  }
+  .hero h1 .hero-line {
+    white-space: normal;
+  }
+  .hero-bottom p {
+    font-size: 11px;
+  }
+  .hero-portrait {
+    width: 100%;
+    right: auto;
+    bottom: auto;
+  }
+  .portrait-frame {
+    aspect-ratio: 0.82;
+  }
+  .hero-bottom .text-link {
+    width: max-content;
+  }
+  .practice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+  }
+  .practice-card:last-child {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .practice-card:last-child .card-image {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 280px;
+  }
+  .practice-card:last-child .card-body {
+    margin: 0;
+    padding: 25px;
+    border-top: 0;
+    border-left: 1px solid #c3a57470;
+  }
+}
+@media (max-width: 767px) {
+  .site-header {
+    height: 78px;
+  }
+  .site-header .wordmark {
+    font-size: 21px;
+  }
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 138px 6% 0;
+    min-height: auto;
+    height: auto;
+    max-height: none;
+    background: #101316;
+  }
+  .hero-content {
+    padding: 0;
+    order: 0;
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .hero-content .eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.16em;
+    margin-bottom: 25px;
+  }
+  .hero-name {
+    font-size: clamp(76px, 16.9vw, 115px);
+    padding-bottom: 26px;
+    line-height: 0.88;
+  }
+  .hero-name > .hero-surname {
+    margin-top: 7px;
+  }
+  .name-rule {
+    width: 55px;
+  }
+  .hero h1 {
+    max-width: none;
+    font-size: clamp(26px, 6vw, 35px);
+    margin-top: 24px;
+    line-height: 1.16;
+  }
+  .hero-line {
+    white-space: normal;
+  }
+  .hero-bottom {
+    display: flex;
+    max-width: none;
+    gap: 14px 20px;
+    margin-top: 21px;
+  }
+  .hero-bottom p {
+    font-size: 12px;
+    max-width: 430px;
+    line-height: 1.85;
+    margin-bottom: 6px;
+  }
+  .hero-bottom .button {
+    min-height: 53px;
+    padding: 17px 18px;
+    font-size: 9px;
+    gap: 20px;
+  }
+  .hero-bottom .text-link {
+    font-size: 9px;
+    gap: 15px;
+  }
+  .hero-portrait {
+    order: 1;
+    inset: auto;
+    position: relative;
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    max-width: 430px;
+    height: auto;
+    aspect-ratio: auto;
+    margin: 45px auto 0;
+    align-self: center;
+    justify-self: auto;
+    mask-image: none !important;
+  }
+  .portrait-frame {
+    aspect-ratio: 1.04;
+    box-shadow:
+      10px 12px 0 -1px #0c1012,
+      10px 12px 0 0 #c3a57420;
+  }
+  .portrait-frame:before {
+    font-size: 6px;
+    top: 14px;
+    left: 14px;
+  }
+  .hero-portrait .hero-portrait-photo {
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  .portrait-credit {
+    flex-direction: row;
+    align-items: center;
+    font-size: 7px;
+    letter-spacing: 0.08em;
+    margin-top: 28px;
+  }
+  .portrait-credit span:last-child {
+    font-size: 5px;
+  }
+  .hero-caption {
+    position: relative;
+    inset: auto;
+    order: 2;
+    width: 100%;
+    margin: 30px 0 0;
+    padding: 19px 0 22px;
+    min-height: 58px;
+    font-size: 6px;
+  }
+  .hero-axis {
+    left: 88%;
+  }
+  .hero-orbit {
+    right: -120%;
+    top: 30%;
+    width: 650px;
+    height: 650px;
+  }
+  .section-label {
+    font-size: 7px;
+  }
+  .section-label span + span {
+    font-size: 6px;
+  }
+  .manifesto {
+    padding-top: 58px;
+  }
+  .professional-portrait {
+    aspect-ratio: 1.02;
+    margin-right: 10px;
+    clip-path: inset(-25px -5px -30px -25px);
+  }
+  .professional-portrait img {
+    object-position: 50% 20%;
+  }
+  .manifesto-copy h2 {
+    font-size: clamp(40px, 9vw, 60px);
+  }
+  .manifesto-copy > p:not(.eyebrow) {
+    font-size: 13px;
+  }
+  .practice .section-heading {
+    margin-bottom: 34px;
+  }
+  .practice .section-heading h2 {
+    font-size: clamp(34px, 8.5vw, 49px);
+  }
+  .practice-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .practice-card {
+    display: flex;
+    grid-column: auto;
+    overflow: visible;
+  }
+  .card-image {
+    height: auto;
+    aspect-ratio: 1.36;
+  }
+  .card-body {
+    margin: -12px 12px 0;
+    padding: 24px 23px 25px;
+  }
+  .practice-card h3 {
+    font-size: 39px;
+    margin-top: 18px;
+  }
+  .card-body > p {
+    font-size: 12px;
+    max-width: none;
+    margin-bottom: 24px;
+  }
+  .card-link {
+    font-size: 7px;
+  }
+  .card-image .card-image-tag {
+    font-size: 6px;
+  }
+  .practice-card:last-child .card-body {
+    border-left: 0;
+  }
+  .visual-interlude {
+    height: 340px;
+  }
+  .interlude-image {
+    height: 235px;
+  }
+  .values-list .value-row h3 {
+    font-size: 27px;
+  }
+  .value-row p {
+    font-size: 12px;
+  }
+  .process-step h3 {
+    font-size: 27px;
+  }
+  .faq-list summary h3 {
+    font-size: 12px;
+  }
+  .faq-list .faq-answer p {
+    font-size: 12px;
+  }
+}
+@media (max-width: 359px) {
+  .hero {
+    padding-top: 128px;
+  }
+  .hero-name {
+    font-size: 71px;
+  }
+  .hero h1 {
+    font-size: 25px;
+  }
+  .hero-bottom {
+    gap: 12px;
+  }
+  .hero-bottom .button {
+    width: 100%;
+    max-width: none;
+  }
+  .hero-bottom .text-link {
+    min-height: 44px;
+  }
+  .hero-portrait {
+    margin-top: 30px;
+  }
+  .portrait-credit {
+    font-size: 6px;
+  }
+  .portrait-credit span:last-child {
+    font-size: 4.8px;
+  }
+  .practice-card h3 {
+    font-size: 34px;
+  }
+  .card-body {
+    padding: 22px 18px;
+  }
+  .card-link {
+    font-size: 6px;
+    letter-spacing: 0.04em;
+  }
+}
+@media (max-height: 600px) and (orientation: landscape) {
+  .hero {
+    min-height: 830px;
+  }
+  .hero-portrait {
+    max-width: 360px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-name,
+  .hero-line {
+    animation: none;
+    clip-path: none;
+  }
+  .hero-portrait-photo {
+    transform: none !important;
+  }
+  .practice-card {
+    transform: none !important;
+  }
+  .liquid-architecture img {
+    filter: none;
+  }
+}
+
+.hero-prefix {
+  display: block;
+}
+.portrait-frame:before {
+  font-family: var(--serif);
+  font-size: 19px;
+  letter-spacing: 0.04em;
+}
+@media (max-width: 767px) {
+  .hero-prefix {
+    font-size: 0.76em;
+    line-height: 1;
+    letter-spacing: 0.015em;
+    white-space: nowrap;
+  }
+  .hero-name > .hero-surname {
+    font-size: 1.18em;
+    line-height: 0.9;
+    margin-top: 7px;
+  }
+  .portrait-frame:before {
+    font-size: 16px;
+  }
+}
+@media (min-width: 768px) and (max-width: 900px) {
+  .hero-prefix {
+    font-size: 0.86em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+}
+@media(max-width:359px){.hero-name{font-size:67px}}
