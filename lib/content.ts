@@ -1,7 +1,9 @@
 export const office = {
   name: "Dr. Osmar Malta",
   email: "maltaemachadoadv@gmail.com",
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "",
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "5521988049390",
+  instagram: "https://www.instagram.com/osmarmaltaadvogado/",
+  instagramHandle: "@osmarmaltaadvogado",
   regions: ["Centro", "Del Castilho", "Santa Cruz"],
 };
 export const areas = [
@@ -30,7 +32,7 @@ export const areas = [
 export const faqs = [
   [
     "Como iniciar um atendimento?",
-    "Envie um e-mail com seu nome, uma forma de contato e o assunto geral da sua demanda. Evite incluir documentos ou informações sensíveis nesse primeiro contato.",
+    "Entre em contato pelo WhatsApp (21) 98804-9390 ou envie um e-mail com seu nome, uma forma de contato e o assunto geral da sua demanda. Evite incluir documentos ou informações sensíveis nesse primeiro contato.",
   ],
   [
     "Quais áreas jurídicas são atendidas?",
@@ -46,6 +48,6 @@ export const faqs = [
   ],
   [
     "Como entrar em contato com o escritório?",
-    "Utilize maltaemachadoadv@gmail.com ou o formulário desta página, que prepara uma mensagem no seu aplicativo de e-mail. O WhatsApp será disponibilizado após confirmação do contato oficial.",
+    "Utilize o WhatsApp (21) 98804-9390, o e-mail maltaemachadoadv@gmail.com ou o formulário desta página, que prepara uma mensagem no seu aplicativo de e-mail. O perfil do Instagram informado é @osmarmaltaadvogado.",
   ],
 ];

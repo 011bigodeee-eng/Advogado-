@@ -99,7 +99,8 @@ const fs = require("node:fs");
       await page.locator(".contact-email").getAttribute("href"),
       "mailto:maltaemachadoadv@gmail.com",
     );
-    assert.equal(await page.locator('a[href*="wa.me"]').count(), 0);
+    assert.equal(await page.locator('.contact-whatsapp').getAttribute('href'), 'https://wa.me/5521988049390');
+    assert.equal(await page.locator('.contact-instagram').getAttribute('href'), 'https://www.instagram.com/osmarmaltaadvogado/');
     console.log("PASS consent, form validation and verified contact");
     await page.locator("#inicio").scrollIntoViewIfNeeded();
     await page.screenshot({ path: "/tmp/osmar-mobile.png" });

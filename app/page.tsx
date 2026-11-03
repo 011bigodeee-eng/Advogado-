@@ -689,7 +689,7 @@ export default function Home() {
               </a>
               {office.whatsapp && /^\d{10,15}$/.test(office.whatsapp) ? (
                 <a
-                  className="button primary"
+                  className="button primary contact-whatsapp"
                   href={`https://wa.me/${office.whatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -704,6 +704,9 @@ export default function Home() {
                   <small>Contato oficial pendente de confirmação.</small>
                 </div>
               )}
+              <a className="contact-instagram text-link" href={office.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram: @osmarmaltaadvogado (abre em nova aba)">
+                <span>Instagram · {office.instagramHandle}</span><Arrow />
+              </a>
               <p className="contact-region">
                 Centro · Del Castilho · Santa Cruz
                 <br />

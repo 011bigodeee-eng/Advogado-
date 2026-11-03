@@ -1940,3 +1940,5 @@ details[open] summary i:after {
 @media(prefers-reduced-motion:reduce){.liquid-architecture img{filter:none}}
 .hero-portrait{height:auto;aspect-ratio:1;mask-image:radial-gradient(ellipse 70% 70% at 50% 45%,#000 48%,transparent 80%)}
 @media(min-width:768px){.hero-bottom{display:grid;grid-template-columns:max-content max-content;gap:20px 28px}.hero-bottom p{grid-column:1/-1}.hero-bottom .text-link{align-self:center;justify-self:start}}
+
+.contact-whatsapp{margin:25px 0 16px}.contact-instagram{display:flex;width:fit-content;max-width:100%;font-size:11px;gap:22px;overflow-wrap:anywhere}

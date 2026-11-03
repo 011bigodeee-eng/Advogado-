@@ -28,16 +28,15 @@ O teste usa Chromium instalado no sistema (`/usr/bin/chromium`), o caminho em `C
 
 Dados, áreas e respostas em `lib/content.ts`. Tokens de cor, tipografia e breakpoints em `app/globals.css`. Não há backend de envio: o formulário valida os campos e o consentimento e prepara uma mensagem no aplicativo de e-mail do visitante. A pessoa deve revisar e enviar por lá. Nenhum envio é simulado. Sem analytics, persistência de mensagens, mapas ou cookies de marketing.
 
-Para ativar WhatsApp, copiar `.env.example` para `.env.local` e preencher `NEXT_PUBLIC_WHATSAPP` somente com o contato oficial confirmado, em dígitos, incluindo código do país e DDD. Reiniciar o servidor; em produção, refazer o build. Sem esse valor, o CTA permanece demonstrativo e indisponível.
+Contatos informados pelo usuário: WhatsApp **+55 21 98804-9390** e Instagram **@osmarmaltaadvogado**. Os links estão ativos em `lib/content.ts`. A variável opcional `NEXT_PUBLIC_WHATSAPP` permite substituir o número em dígitos, incluindo código do país e DDD; alterações nessa variável exigem reinício/rebuild. Um valor vazio desativa o CTA de WhatsApp.
 
 ## Antes da publicação
 
 Confirmar com o advogado:
 
-- WhatsApp e inscrição OAB; nunca preenchidos com dados fictícios.
+- Inscrição OAB; não preenchida com dados fictícios.
 - Endereço completo e pertinência das regiões Centro, Del Castilho e Santa Cruz.
 - Horário de atendimento (09h–18h foi informado, mas não está anunciado como confirmado).
-- URL exata do Instagram; nenhum perfil foi presumido.
 - Fotografia autorizada, identidade e informações profissionais adicionais.
 - Textos institucionais, princípios propostos, fluxo de atendimento e aviso de privacidade.
 - Domínio oficial (a referência fornecida não foi tratada como domínio de publicação), SEO/Open Graph e liberação de indexação.
