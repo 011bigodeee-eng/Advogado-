@@ -1,7 +1,12 @@
+import {
+  WHATSAPP_NUMBER,
+  WHATSAPP_MESSAGES,
+  WHATSAPP_DISPLAY,
+} from "./contact";
 export const office = {
   name: "Dr. Osmar Malta",
   email: "maltaemachadoadv@gmail.com",
-  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "5521988049390",
+  whatsapp: WHATSAPP_NUMBER,
   instagram: "https://www.instagram.com/osmarmaltaadvogado/",
   instagramHandle: "@osmarmaltaadvogado",
   regions: ["Centro", "Del Castilho", "Santa Cruz"],
@@ -9,6 +14,7 @@ export const office = {
 export const areas = [
   {
     number: "01",
+    whatsappMessage: WHATSAPP_MESSAGES.family,
     title: "Direito de Família",
     text: "Orientação em questões familiares, com atenção às pessoas e às particularidades de cada história.",
     image: "/images/direito-familia.png",
@@ -17,6 +23,7 @@ export const areas = [
   },
   {
     number: "02",
+    whatsappMessage: WHATSAPP_MESSAGES.probate,
     title: "Inventários",
     text: "Acompanhamento de procedimentos sucessórios e orientação sobre as etapas da transmissão patrimonial.",
     image: "/images/inventarios.png",
@@ -25,6 +32,7 @@ export const areas = [
   },
   {
     number: "03",
+    whatsappMessage: WHATSAPP_MESSAGES.criminal,
     title: "Execução Penal",
     text: "Atuação em questões relacionadas ao cumprimento de penas, com análise individual da situação jurídica.",
     image: "/images/execucao-penal.png",
@@ -35,7 +43,7 @@ export const areas = [
 export const faqs = [
   [
     "Como iniciar um atendimento?",
-    "Entre em contato pelo WhatsApp (21) 98804-9390 ou envie um e-mail com seu nome, uma forma de contato e o assunto geral da sua demanda. Evite incluir documentos ou informações sensíveis nesse primeiro contato.",
+    `${WHATSAPP_DISPLAY ? `Entre em contato pelo WhatsApp ${WHATSAPP_DISPLAY} ou envie` : "Envie"} um e-mail com seu nome, uma forma de contato e o assunto geral da sua demanda. Evite incluir documentos ou informações sensíveis nesse primeiro contato.`,
   ],
   [
     "Quais áreas jurídicas são atendidas?",
@@ -51,6 +59,6 @@ export const faqs = [
   ],
   [
     "Como entrar em contato com o escritório?",
-    "Utilize o WhatsApp (21) 98804-9390, o e-mail maltaemachadoadv@gmail.com ou o formulário desta página, que prepara uma mensagem no seu aplicativo de e-mail. O perfil do Instagram informado é @osmarmaltaadvogado.",
+    `Utilize ${WHATSAPP_DISPLAY ? `o WhatsApp ${WHATSAPP_DISPLAY}, ` : ""}o e-mail maltaemachadoadv@gmail.com ou o formulário desta página, que prepara uma mensagem para você revisar e enviar pelo WhatsApp. O perfil do Instagram informado é @osmarmaltaadvogado.`,
   ],
 ];

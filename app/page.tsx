@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import PracticeCard from "@/components/PracticeCard";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
+import { useSiteMotion } from "@/components/useSiteMotion";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { contactMessage, whatsappLink, WHATSAPP_MESSAGES } from "@/lib/contact";
 import { areas, faqs, office } from "@/lib/content";
 const Sculpture = dynamic(() => import("@/components/Sculpture"), {
   ssr: false,
@@ -45,12 +45,14 @@ export default function Home() {
     [menu, setMenu] = useState(false),
     [scrolled, setScrolled] = useState(false),
     [privacy, setPrivacy] = useState(false),
-    [artVisible, setArtVisible] = useState(false);
+    [artVisible, setArtVisible] = useState(false),
+    [contactVisible, setContactVisible] = useState(false),
+    [preparedLink, setPreparedLink] = useState("");
   const main = useRef<HTMLDivElement>(null),
     menuButton = useRef<HTMLButtonElement>(null),
     dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    const timer = setTimeout(() => setIntro(false), 2200);
+    const timer = setTimeout(() => setIntro(false), 1950);
     const scroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", scroll, { passive: true });
     scroll();
@@ -88,105 +90,23 @@ export default function Home() {
       menuButton.current?.focus();
     };
   }, [menu]);
+  useSiteMotion(main);
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const mm = gsap.matchMedia();
-    let lenis: Lenis | undefined;
-    let tick: ((time: number) => void) | undefined;
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      lenis = new Lenis({ duration: 1.05, anchors: true });
-      lenis.on("scroll", ScrollTrigger.update);
-      tick = (time) => lenis?.raf(time * 1000);
-      gsap.ticker.add(tick);
-      const ctx = gsap.context(() => {
-        gsap.utils
-          .toArray<HTMLElement>("[data-reveal]:not(.practice-card)")
-          .forEach((el) => {
-            gsap.fromTo(
-              el,
-              { y: 30, opacity: 0 },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.9,
-                ease: "power2.out",
-                scrollTrigger: { trigger: el, start: "top 94%", once: true },
-              },
-            );
-          });
-        gsap.fromTo(
-          ".practice-card",
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.95,
-            stagger: 0.16,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ".practice-grid",
-              start: "top 90%",
-              once: true,
-            },
-          },
-        );
-        gsap.utils.toArray<HTMLElement>(".card-image").forEach((image) =>
-          gsap.fromTo(
-            image,
-            { clipPath: "inset(12% 0 0 0)" },
-            {
-              clipPath: "inset(0% 0 0 0)",
-              duration: 1.2,
-              ease: "power3.out",
-              scrollTrigger: { trigger: image, start: "top 94%", once: true },
-            },
-          ),
-        );
-        gsap.fromTo(
-          ".hero-portrait",
-          { opacity: 0, y: 24 },
-          { opacity: 1, y: 0, duration: 1.2, delay: 1.8, ease: "power2.out" },
-        );
-        gsap.to(".hero-portrait-photo", {
-          yPercent: 5,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
         });
-        gsap.to(".diagonal-track", {
-          xPercent: matchMedia("(max-width: 767px)").matches ? -6 : -15,
-          y: 35,
-          rotate: -2,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".visual-interlude",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-        gsap.to(".liquid-architecture img", {
-          scale: 1.08,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".visual-interlude",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-      }, main);
-      return () => {
-        ctx.revert();
-        if (tick) gsap.ticker.remove(tick);
-        lenis?.destroy();
-      };
-    });
-    return () => mm.revert();
+        setContactVisible(visible.size > 0);
+      },
+      { rootMargin: "80px 0px" },
+    );
+    document
+      .querySelectorAll("#contato,.site-footer")
+      .forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
   }, []);
   useEffect(() => {
     const element = document.querySelector(".values-art");
@@ -194,7 +114,11 @@ export default function Home() {
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setArtVisible(true);
+          setArtVisible(
+            window.innerWidth >= 768 &&
+              !matchMedia("(prefers-reduced-motion: reduce)").matches &&
+              navigator.hardwareConcurrency > 2,
+          );
           io.disconnect();
         }
       },
@@ -231,10 +155,37 @@ export default function Home() {
   };
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const subject = `Contato — ${data.get("assunto")}`;
-    const body = `Nome: ${data.get("nome")}\nContato: ${data.get("contato")}\n\n${data.get("mensagem")}`;
-    window.location.href = `mailto:${office.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const values = {
+      name: String(data.get("nome") ?? "").trim(),
+      contact: String(data.get("contato") ?? "").trim(),
+      area: String(data.get("assunto") ?? "").trim(),
+      message: String(data.get("mensagem") ?? "").trim(),
+    };
+    const name = form.elements.namedItem("nome") as HTMLInputElement;
+    const contact = form.elements.namedItem("contato") as HTMLInputElement;
+    const message = form.elements.namedItem("mensagem") as HTMLTextAreaElement;
+    name.setCustomValidity(values.name.length < 2 ? "Informe seu nome." : "");
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.contact);
+    const digits = values.contact.replace(/\D/g, "");
+    const isPhone =
+      /^[+()\d\s.-]+$/.test(values.contact) &&
+      digits.length >= 10 &&
+      digits.length <= 15;
+    contact.setCustomValidity(
+      isEmail || isPhone
+        ? ""
+        : "Informe um telefone com DDD ou um e-mail válido.",
+    );
+    message.setCustomValidity(
+      values.message ? "" : "Descreva brevemente o assunto.",
+    );
+    if (!form.reportValidity()) return;
+    const link = whatsappLink(contactMessage(values));
+    if (!link) return;
+    setPreparedLink(link);
+    window.open(link, "_blank", "noopener,noreferrer");
   };
   return (
     <div ref={main}>
@@ -262,7 +213,12 @@ export default function Home() {
             </a>
           ))}
         </nav>
-        <a className="header-cta" href="#contato">
+        <a
+          className="header-cta"
+          href={whatsappLink(WHATSAPP_MESSAGES.general) || "#contato"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Agendar atendimento <Arrow />
         </a>
         <button
@@ -306,7 +262,6 @@ export default function Home() {
       <main id="conteudo">
         <section className="hero" id="inicio" onPointerMove={hover}>
           <div className="hero-atmosphere" aria-hidden="true">
-            <div className="hero-orbit" />
             <span className="hero-axis" />
           </div>
           <div className="hero-portrait">
@@ -316,7 +271,8 @@ export default function Home() {
                 src="/images/retrato-abertura.png"
                 alt="Retrato fornecido para a apresentação de Dr. Osmar Malta"
                 fill
-                preload
+                loading="eager"
+                fetchPriority="high"
                 sizes="(max-width: 767px) 88vw, 40vw"
               />
               <span className="portrait-corner" aria-hidden="true" />
@@ -473,35 +429,41 @@ export default function Home() {
           </div>
         </section>
         <section
-          className="visual-interlude"
-          aria-label="Uma perspectiva mais humana"
+          className="human-editorial section"
+          id="perspectiva"
+          aria-labelledby="editorial-heading"
         >
-          <div className="diagonal-track">
-            <div className="interlude-image liquid-architecture">
-              <Image
-                src="/images/execucao-penal.png"
-                alt="Cena ilustrativa de análise processual em ambiente jurídico brasileiro"
-                fill
-                sizes="60vw"
-              />
+          <div className="editorial-grid">
+            <div className="editorial-copy" data-reveal>
+              <Eyebrow>DIREITO COM PERSPECTIVA HUMANA</Eyebrow>
+              <h2 id="editorial-heading">
+                Além dos processos,
+                <br />
+                <em>existem pessoas.</em>
+              </h2>
+              <p>
+                Ouvir o contexto de cada situação é o primeiro passo para uma
+                orientação jurídica clara e responsável.
+              </p>
+              <span className="editorial-line" aria-hidden="true" />
             </div>
-            <p>
-              Além dos processos,
-              <br />
-              <em>existem pessoas.</em>
-            </p>
-            <div className="interlude-image second">
-              <Image
-                src="/images/direito-familia.png"
-                alt="Cena ilustrativa de consulta jurídica familiar com adultos"
-                fill
-                sizes="40vw"
-              />
-            </div>
+            <figure className="editorial-figure">
+              <div className="editorial-photo">
+                <div className="editorial-image-inner">
+                  <Image
+                    src="/images/direito-familia.png"
+                    alt="Cena ilustrativa de uma conversa reservada de orientação jurídica com adultos"
+                    fill
+                    sizes="(max-width: 767px) 88vw, 44vw"
+                  />
+                </div>
+                <span className="editorial-liquid" aria-hidden="true" />
+              </div>
+              <figcaption>
+                CENA ILUSTRATIVA · ESCUTA E ORIENTAÇÃO JURÍDICA
+              </figcaption>
+            </figure>
           </div>
-          <span className="interlude-note">
-            DIREITO, COM PERSPECTIVA HUMANA.
-          </span>
         </section>
         <section className="values section" id="diferenciais">
           <div className="section-label">
@@ -567,11 +529,9 @@ export default function Home() {
                     <p>{text}</p>
                   </div>
                   <span className="value-cross">+</span>
-                  <span
-                    className="cursor-reveal"
-                    aria-hidden="true"
-                    style={{ backgroundImage: `url(${areas[i % 3].image})` }}
-                  />
+                  <span className="cursor-reveal" aria-hidden="true">
+                    <Image src={areas[i % 3].image} alt="" fill sizes="110px" />
+                  </span>
                 </div>
               ))}
               <p className="small-note">
@@ -708,7 +668,7 @@ export default function Home() {
               {office.whatsapp && /^\d{10,15}$/.test(office.whatsapp) ? (
                 <a
                   className="button primary contact-whatsapp"
-                  href={`https://wa.me/${office.whatsapp}`}
+                  href={whatsappLink(WHATSAPP_MESSAGES.general)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -740,7 +700,20 @@ export default function Home() {
                 </span>
               </p>
             </div>
-            <form onSubmit={submit} className="contact-form">
+            <form
+              onSubmit={submit}
+              onInput={(event) => {
+                setPreparedLink("");
+                const target = event.target;
+                if (
+                  target instanceof HTMLInputElement ||
+                  target instanceof HTMLTextAreaElement
+                )
+                  target.setCustomValidity("");
+              }}
+              className="contact-form"
+              aria-describedby="form-explanation"
+            >
               <p className="form-title">Conte-nos como podemos orientar.</p>
               <div className="form-row">
                 <label>
@@ -757,7 +730,7 @@ export default function Home() {
                   E-mail ou telefone
                   <input
                     name="contato"
-                    autoComplete="email"
+                    autoComplete="off"
                     placeholder="Como entrar em contato"
                     required
                     maxLength={150}
@@ -765,7 +738,7 @@ export default function Home() {
                 </label>
               </div>
               <label>
-                Assunto
+                Área jurídica
                 <select name="assunto" required defaultValue="">
                   <option disabled value="">
                     Selecione uma área
@@ -798,12 +771,34 @@ export default function Home() {
                 </span>
               </label>
               <button type="submit" className="button primary">
-                Preparar e-mail <Arrow />
+                Continuar pelo WhatsApp <WhatsAppIcon />
               </button>
-              <p className="small-note">
-                Este formulário abre seu aplicativo de e-mail. Revise e envie a
-                mensagem por lá. Nenhum envio é realizado pelo site.
+              <p className="small-note" id="form-explanation">
+                Ao continuar, o WhatsApp abre com sua mensagem preenchida.
+                Revise e envie manualmente. O site não envia nem armazena sua
+                mensagem.
               </p>
+              {preparedLink && (
+                <div className="form-prepared" role="status">
+                  <p>
+                    Mensagem preparada para revisão. Se a nova aba não abriu,
+                    use o link abaixo.
+                  </p>
+                  <a
+                    href={preparedLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Abrir conversa no WhatsApp <Arrow />
+                  </a>
+                </div>
+              )}
+              <a
+                className="form-email-alternative"
+                href={`mailto:${office.email}`}
+              >
+                Prefere e-mail? {office.email}
+              </a>
             </form>
           </div>
         </section>
@@ -836,6 +831,22 @@ export default function Home() {
           do advogado.
         </p>
       </footer>
+      {!intro &&
+        !menu &&
+        !privacy &&
+        !contactVisible &&
+        whatsappLink(WHATSAPP_MESSAGES.general) && (
+          <a
+            className="whatsapp-float"
+            href={whatsappLink(WHATSAPP_MESSAGES.general)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Conversar pelo WhatsApp com Dr. Osmar Malta"
+          >
+            <WhatsAppIcon />
+            <span>Conversar pelo WhatsApp</span>
+          </a>
+        )}
       <dialog
         ref={dialog}
         className="privacy-dialog"
@@ -861,13 +872,16 @@ export default function Home() {
           <p>
             Esta prévia não armazena mensagens em um servidor nem utiliza
             ferramentas de análise ou cookies de marketing. Os campos do
-            formulário são usados somente para preparar um e-mail no seu próprio
-            aplicativo.
+            formulário são usados somente para preparar uma mensagem no
+            WhatsApp, após sua ação de continuar. Você revisa e envia
+            manualmente.
           </p>
           <p>
-            Após o envio pelo seu provedor de e-mail, os dados serão recebidos
-            em {office.email}. Evite informar dados sensíveis, documentos e
-            informações de terceiros no primeiro contato.
+            Ao abrir o WhatsApp, o conteúdo informado é incluído no link de
+            conversa e compartilhado com esse serviço, sujeito às suas próprias
+            regras de privacidade. Não inclua dados sensíveis, documentos ou
+            informações de terceiros. O e-mail {office.email} permanece
+            disponível como alternativa.
           </p>
           <p>
             Para dúvidas sobre o tratamento de seus dados, entre em contato pelo

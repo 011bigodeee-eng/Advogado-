@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { whatsappLink } from "@/lib/contact";
 import type { areas } from "@/lib/content";
 type Props = { area: (typeof areas)[number] };
 export default function PracticeCard({ area }: Props) {
@@ -16,12 +17,14 @@ export default function PracticeCard({ area }: Props) {
     event.currentTarget.style.setProperty("--my", `${y}px`);
     event.currentTarget.style.setProperty(
       "--tilt",
-      `${(x / box.width - 0.5) * 4}deg`,
+      `${(x / box.width - 0.5) * 3}deg`,
     );
   }
   return (
     <a
-      href="#contato"
+      href={whatsappLink(area.whatsappMessage) || "#contato"}
+      target="_blank"
+      rel="noopener noreferrer"
       className="practice-card"
       onPointerMove={move}
       onPointerLeave={(event) =>
@@ -46,7 +49,7 @@ export default function PracticeCard({ area }: Props) {
         <h3>{area.title}</h3>
         <p>{area.text}</p>
         <span className="card-link">
-          <span>CONVERSAR SOBRE O ASSUNTO</span>
+          <span>CONVERSAR PELO WHATSAPP</span>
           <svg
             aria-hidden="true"
             width="24"
